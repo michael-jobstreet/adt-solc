@@ -7,7 +7,7 @@
 			"Type" : "String",
 			"MinLength" : "1",
 			"MaxLength" : "255",
-			"Default" : "adt-solb-network"
+			"Default" : "vpc-devops-test"
 		},
 		"ADBUsername" : {
 			"Type": "String",
@@ -22,52 +22,6 @@
 		}
 	},
 	"Resources" : {
-		"AmaysimDB01PriSub01" : {
-			"Type" : "AWS::EC2::Subnet",
-			"Properties" : {
-				"AvailabilityZone" : "ap-southeast-2a",
-				"CidrBlock" : "10.0.4.0/24",
-				"VpcId" : {"Fn::ImportValue" : {"Fn::Sub" : "${AmaysimNetworkStackName}-AmaysimVPC02ID"}},
-				"Tags" : [{"Key" : "Name", "Value" : "adt-solb Amaysim DB01 Private Subnet01"}]
-			}
-		},
-		"AmaysimDB01PriSubsSG01" : {
-			"Type" : "AWS::EC2::SecurityGroup",
-			"Properties" : {
-				"GroupDescription" : "Amaysim DB01 Private Subnet01 SG01",
-				"Tags" : [{"Key" : "Name", "Value" : "adt-solb Amaysim DB01 PrivSub01 SG01"}],
-				"VpcId" : {"Fn::ImportValue" : {"Fn::Sub" : "${AmaysimNetworkStackName}-AmaysimVPC02ID"}}
-			}
-		},
-		"AmaysimDB01PriSubsInboundTCP02" : {
-			"Type" : "AWS::EC2::SecurityGroupIngress",
-			"Properties" : {
-				"GroupId" : {"Ref" : "AmaysimDB01PriSubsSG01"},
-				"CidrIp" : "10.0.2.0/24",
-				"IpProtocol" : "tcp",
-				"FromPort" : "3306",
-				"ToPort" : "3306"
-			}
-		},
-		"AmaysimDB01PriSubsInboundTCP03" : {
-			"Type" : "AWS::EC2::SecurityGroupIngress",
-			"Properties" : {
-				"GroupId" : {"Ref" : "AmaysimDB01PriSubsSG01"},
-				"CidrIp" : "10.0.3.0/24",
-				"IpProtocol" : "tcp",
-				"FromPort" : "3306",
-				"ToPort" : "3306"
-			}
-		},
-		"AmaysimDB01PriSub02" : {
-			"Type" : "AWS::EC2::Subnet",
-			"Properties" : {
-				"AvailabilityZone" : "ap-southeast-2b",
-				"CidrBlock" : "10.0.5.0/24",
-				"VpcId" : {"Fn::ImportValue" : {"Fn::Sub" : "${AmaysimNetworkStackName}-AmaysimVPC02ID"}},
-				"Tags" : [{"Key" : "Name", "Value" : "adt-solb Amaysim DB01 Private Subnet02"}]
-			}
-		},
 		"AmaysimDBCluster" : {
 			"Type" : "AWS::RDS::DBCluster",
 			"Properties" : {
@@ -76,17 +30,17 @@
 				"MasterUsername" : {"Ref" : "ADBUsername"},
 				"MasterUserPassword" : {"Ref" : "ADBPassword"},
 				"Port" : "3306",
-				"Tags" : [{"Key" : "Name", "Value" : "adt-solb Amaysim Database Cluster"}],
-				"VpcSecurityGroupIds" : [{"Ref" : "AmaysimDB01PriSubsSG01"}]
+				"Tags" : [{"Key" : "Name", "Value" : "adt-solc Amaysim Database Cluster"}],
+				"VpcSecurityGroupIds" : [{"Fn::ImportValue" : {"Fn::Sub" : "${AmaysimNetworkStackName}-privateSubnetSGID"}}]
 			}
 		},
 		"AmaysimDBSubnetGroup" : {
 			"Type" : "AWS::RDS::DBSubnetGroup",
 			"Properties" : {
 				"DBSubnetGroupDescription" : "Amaysim DB Subnet Group",
-				"SubnetIds" : [
-					{"Ref" : "AmaysimDB01PriSub01"},
-					{"Ref" : "AmaysimDB01PriSub02"}
+				"SubnetIds" : [  
+					{"Fn::ImportValue" : {"Fn::Sub" : "${AmaysimNetworkStackName}-privateSubnetAID"}},
+					{"Fn::ImportValue" : {"Fn::Sub" : "${AmaysimNetworkStackName}-privateSubnetBID"}}
 				]
 			}
 		},
