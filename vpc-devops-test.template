@@ -1,0 +1,260 @@
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+
+	"Mappings": {
+		"vpc": {
+			"cidr": {
+				"vpc": "10.0.0.0/16",
+				"publicSubnetA": "10.0.0.0/24",
+				"publicSubnetB": "10.0.1.0/24",
+				"publicSubnetC": "10.0.2.0/24",
+				"privateSubnetA": "10.0.3.0/24",
+				"privateSubnetB": "10.0.4.0/24",
+				"privateSubnetC": "10.0.5.0/24"
+			},
+			"az": {
+				"publicSubnetA": "ap-southeast-2a",
+				"publicSubnetB": "ap-southeast-2b",
+				"publicSubnetC": "ap-southeast-2c",
+				"privateSubnetA": "ap-southeast-2a",
+				"privateSubnetB": "ap-southeast-2b",
+				"privateSubnetC": "ap-southeast-2c"
+			}
+		}
+	},
+
+	"Resources": {
+		"amaysimVPC": {
+			"Type": "AWS::EC2::VPC",
+			"Properties": {
+				"CidrBlock": { "Fn::FindInMap": [ "vpc", "cidr", "vpc"] },
+				"EnableDnsSupport": "true",
+				"EnableDnsHostnames": "true",
+				"Tags": [
+					{"Key": "Name", "Value": "Playground Test"}
+				]
+			}
+		},
+
+		"publicSubnetA": {
+			"Type": "AWS::EC2::Subnet",
+			"Properties": {
+				"VpcId": { "Ref": "amaysimVPC" },
+				"CidrBlock": { "Fn::FindInMap": [ "vpc", "cidr", "publicSubnetA"] },
+				"AvailabilityZone": { "Fn::FindInMap": [ "vpc", "az", "publicSubnetA"] },
+				"MapPublicIpOnLaunch": "true",
+				"Tags": [
+					{ "Key": "Name", "Value": "Public Subnet A" }
+				]
+			}
+		},
+
+		"publicSubnetB": {
+			"Type": "AWS::EC2::Subnet",
+			"Properties": {
+				"VpcId": { "Ref": "amaysimVPC" },
+				"CidrBlock": { "Fn::FindInMap": [ "vpc", "cidr", "publicSubnetB"] },
+				"MapPublicIpOnLaunch": "true",
+				"AvailabilityZone": { "Fn::FindInMap": [ "vpc", "az", "publicSubnetB"] },
+				"Tags": [
+					{ "Key": "Name", "Value": "Public Subnet B" }
+				]
+			}
+		},
+
+		"publicSubnetC": {
+			"Type": "AWS::EC2::Subnet",
+			"Properties": {
+				"VpcId": { "Ref": "amaysimVPC" },
+				"CidrBlock": { "Fn::FindInMap": [ "vpc", "cidr", "publicSubnetC"] },
+				"MapPublicIpOnLaunch": "true",
+				"AvailabilityZone": { "Fn::FindInMap": [ "vpc", "az", "publicSubnetC"] },
+				"Tags": [
+					{ "Key": "Name", "Value": "Public Subnet C" }
+				]
+			}
+		},
+
+		"privateSubnetA": {
+			"Type": "AWS::EC2::Subnet",
+			"Properties": {
+				"VpcId": { "Ref": "amaysimVPC" },
+				"CidrBlock": { "Fn::FindInMap": [ "vpc", "cidr", "privateSubnetA"] },
+				"MapPublicIpOnLaunch": "false",
+				"AvailabilityZone": { "Fn::FindInMap": [ "vpc", "az", "privateSubnetA"] },
+				"Tags": [
+					{ "Key": "Name", "Value": "Private Subnet A" }
+				]
+			}
+		},
+
+		"privateSubnetB": {
+			"Type": "AWS::EC2::Subnet",
+			"Properties": {
+				"VpcId": { "Ref": "amaysimVPC" },
+				"CidrBlock": { "Fn::FindInMap": [ "vpc", "cidr", "privateSubnetB"] },
+				"MapPublicIpOnLaunch": "false",
+				"AvailabilityZone": { "Fn::FindInMap": [ "vpc", "az", "privateSubnetB"] },
+				"Tags": [
+					{ "Key": "Name", "Value": "Private Subnet B" }
+				]
+			}
+		},
+
+		"privateSubnetC": {
+			"Type": "AWS::EC2::Subnet",
+			"Properties": {
+				"VpcId": { "Ref": "amaysimVPC" },
+				"CidrBlock": { "Fn::FindInMap": [ "vpc", "cidr", "privateSubnetC"] },
+				"MapPublicIpOnLaunch": "false",
+				"AvailabilityZone": { "Fn::FindInMap": [ "vpc", "az", "privateSubnetC"] },
+				"Tags": [
+					{ "Key": "Name", "Value": "Private Subnet C" }
+				]
+			}
+		},
+
+		"internetGateway": {
+			"Type": "AWS::EC2::InternetGateway",
+			"Properties": {
+				"Tags": [
+					{"Key": "Name", "Value": "amaysimVPC Internet Gateway"}
+				]
+			}
+		},
+
+		"attachGateway": {
+			"Type": "AWS::EC2::VPCGatewayAttachment",
+			"Properties": {
+				"VpcId": { "Ref": "amaysimVPC" },
+				"InternetGatewayId": { "Ref": "internetGateway" }
+			}
+		},
+
+		"publicRouteTable": {
+			"Type": "AWS::EC2::RouteTable",
+			"Properties": {
+				"VpcId": { "Ref": "amaysimVPC" },
+				"Tags": [
+					{ "Key": "Name", "Value": "Public Route Table" }
+				]
+			}
+		},
+
+		"privateRouteTable": {
+			"Type": "AWS::EC2::RouteTable",
+			"Properties": {
+				"VpcId": { "Ref": "amaysimVPC" },
+				"Tags": [
+					{ "Key": "Name", "Value": "Private Route Table" }
+				]
+			}
+		},
+
+		"publicSubnetARouteTableAssociation": {
+			"Type": "AWS::EC2::SubnetRouteTableAssociation",
+			"Properties": {
+				"SubnetId": { "Ref": "publicSubnetA" },
+				"RouteTableId": { "Ref": "publicRouteTable" }
+			}
+		},
+
+		"publicSubnetBRouteTableAssociation": {
+			"Type": "AWS::EC2::SubnetRouteTableAssociation",
+			"Properties": {
+				"SubnetId": { "Ref": "publicSubnetB" },
+				"RouteTableId": { "Ref": "publicRouteTable" }
+			}
+		},
+
+		"publicSubnetCRouteTableAssociation": {
+			"Type": "AWS::EC2::SubnetRouteTableAssociation",
+			"Properties": {
+				"SubnetId": { "Ref": "publicSubnetC" },
+				"RouteTableId": { "Ref": "publicRouteTable" }
+			}
+		},
+
+		"privateSubnetARouteTableAssociation": {
+			"Type": "AWS::EC2::SubnetRouteTableAssociation",
+			"Properties": {
+				"SubnetId": { "Ref": "privateSubnetA" },
+				"RouteTableId": { "Ref": "privateRouteTable" }
+			}
+		},
+
+		"privateSubnetBRouteTableAssociation": {
+			"Type": "AWS::EC2::SubnetRouteTableAssociation",
+			"Properties": {
+				"SubnetId": { "Ref": "privateSubnetB" },
+				"RouteTableId": { "Ref": "privateRouteTable" }
+			}
+		},
+
+		"privateSubnetCRouteTableAssociation": {
+			"Type": "AWS::EC2::SubnetRouteTableAssociation",
+			"Properties": {
+				"SubnetId": { "Ref": "privateSubnetC" },
+				"RouteTableId": { "Ref": "privateRouteTable" }
+			}
+		},
+
+		"publicInternetRoute": {
+			"Type": "AWS::EC2::Route",
+			"DependsOn": "attachGateway",
+			"Properties": {
+				"RouteTableId": { "Ref": "publicRouteTable" },
+				"DestinationCidrBlock": "0.0.0.0/0",
+				"GatewayId": { "Ref": "internetGateway" }
+			}
+		},
+
+		"privateInternetRoute" : {
+			"Type" : "AWS::EC2::Route",
+			"Properties" : {
+				"RouteTableId" : { "Ref" : "privateRouteTable" },
+				"DestinationCidrBlock" : "0.0.0.0/0",
+				"NatGatewayId" : { "Ref" : "HostedNAT" }
+			}
+		},
+
+		"securityGroupDevServer": {
+			"Type": "AWS::EC2::SecurityGroup",
+			"Properties": {
+				"GroupDescription": "dev-server",
+				"SecurityGroupIngress": [
+					{
+						"IpProtocol": "tcp",
+						"CidrIp": "0.0.0.0/0",
+						"FromPort": 80,
+						"ToPort": 80
+					}
+				],
+				"VpcId": { "Ref": "amaysimVPC" }
+			}
+		},
+
+		"NATEIP": {
+			"Type": "AWS::EC2::EIP",
+			"Properties": {
+				"Domain": "vpc"
+			}
+		},
+
+		"HostedNAT": {
+			"DependsOn": "attachGateway",
+			"Type": "AWS::EC2::NatGateway",
+			"Properties": {
+				"AllocationId": {"Fn::GetAtt": ["NATEIP", "AllocationId"]},
+				"SubnetId": {"Ref": "publicSubnetA"}
+			}
+		}
+	},
+
+	"Outputs": {
+		"SecurityGroup": {
+			"Description": "Security Group",
+			"Value": { "Ref": "securityGroupDevServer" }
+		}
+	}
+}
