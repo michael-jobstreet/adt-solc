@@ -7,14 +7,14 @@
 			"Type" : "String",
 			"MinLength" : "1",
 			"MaxLength" : "255",
-			"Default" : "adt-solb-network"
+			"Default" : "vpc-devops-test"
 		},
 		"AmaysimDatabaseStackName" : {
 			"Description" : "Amaysim Database Stack",
 			"Type" : "String",
 			"MinLength" : "1",
 			"MaxLength" : "255",
-			"Default" : "adt-solb-database"
+			"Default" : "adt-solc-database"
 		},
 		"AmaysimKeyName" : {
 			"Type" : "AWS::EC2::KeyPair::KeyName",
@@ -30,8 +30,8 @@
 				"InstanceType" : "t2.micro",
 				"KeyName" : {"Ref" : "AmaysimKeyName"},
 				"SecurityGroups" : [
-					{"Fn::ImportValue" : {"Fn::Sub" : "${AmaysimNetworkStackName}-AmaysimSGPublicSub02ID"}},
-					{"Fn::ImportValue" : {"Fn::Sub" : "${AmaysimNetworkStackName}-AmaysimSGPublicSub03ID"}}
+					{"Fn::ImportValue" : {"Fn::Sub" : "${AmaysimNetworkStackName}-publicSubnetASGID"}},
+					{"Fn::ImportValue" : {"Fn::Sub" : "${AmaysimNetworkStackName}-publicSubnetBSGID"}}
 				],
 				"UserData" : {
 					"Fn::Base64" : {
