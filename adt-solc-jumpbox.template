@@ -18,7 +18,7 @@
 		"AmaysimJumpServer" : {
 			"Type" : "AWS::EC2::Instance",
 			"Properties" : {
-				"AvailabilityZone" : "ap-southeast-2a",
+				"AvailabilityZone" : "ap-southeast-2c",
 				"ImageId" : "ami-34171d57",
 				"InstanceType" : "t2.micro",
 				"KeyName" : {"Ref" : "AmaysimKeyName"},
