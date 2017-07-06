@@ -7,7 +7,7 @@
 			"Type" : "String",
 			"MinLength" : "1",
 			"MaxLength" : "255",
-			"Default" : "adt-solb-network"
+			"Default" : "vpc-devops-test"
 		},
 		"AmaysimKeyName" : {
 			"Type" : "AWS::EC2::KeyPair::KeyName",
@@ -26,10 +26,10 @@
 					"AssociatePublicIpAddress" : "true",
 					"DeleteOnTermination" : "true",
 					"DeviceIndex" : "0",
-					"SubnetId" : {"Fn::ImportValue" : {"Fn::Sub" : "${AmaysimNetworkStackName}-AmaysimPubSub01ID"}},
-					"GroupSet" : [{"Fn::ImportValue" : {"Fn::Sub" : "${AmaysimNetworkStackName}-AmaysimSGPublicSub01ID"}}]
+					"SubnetId" : {"Fn::ImportValue" : {"Fn::Sub" : "${AmaysimNetworkStackName}-publicSubnetCID"}},
+					"GroupSet" : [{"Fn::ImportValue" : {"Fn::Sub" : "${AmaysimNetworkStackName}-publicSubnetCSGID"}}]
 				}],
-				"Tags" : [{"Key" : "Name", "Value" : "adt-solb Amaysim Jump Server"}]
+				"Tags" : [{"Key" : "Name", "Value" : "adt-solc Amaysim Jump Server"}]
 			}
 		}
 	},
