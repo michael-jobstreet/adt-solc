@@ -59,8 +59,8 @@
 				"MinSize" : "2",
 				"MaxSize" : "2",
 				"DesiredCapacity" : "2",
-				"VPCZoneIdentifier" : [{"Fn::ImportValue" : {"Fn::Sub" : "${AmaysimNetworkStackName}-AmaysimPubSub02ID"}}],
-				"Tags" : [{"Key" : "Name", "Value" : "adt-solb Web Server Sub2", "PropagateAtLaunch" : "true"}]
+				"VPCZoneIdentifier" : [{"Fn::ImportValue" : {"Fn::Sub" : "${AmaysimNetworkStackName}-publicSubnetAID"}}],
+				"Tags" : [{"Key" : "Name", "Value" : "adt-solc Web Server Public Subnet A", "PropagateAtLaunch" : "true"}]
 			}
 		},
 		"AmaysimWebServerGroupSub03" : {
@@ -71,8 +71,8 @@
 				"MinSize" : "2",
 				"MaxSize" : "2",
 				"DesiredCapacity" : "2",
-				"VPCZoneIdentifier" : [{"Fn::ImportValue" : {"Fn::Sub" : "${AmaysimNetworkStackName}-AmaysimPubSub03ID"}}],
-				"Tags" : [{"Key" : "Name", "Value" : "adt-solb Web Server Sub3", "PropagateAtLaunch" : "true"}]
+				"VPCZoneIdentifier" : [{"Fn::ImportValue" : {"Fn::Sub" : "${AmaysimNetworkStackName}-publicSubnetBID"}}],
+				"Tags" : [{"Key" : "Name", "Value" : "adt-solc Web Server Public Subnet B", "PropagateAtLaunch" : "true"}]
 			}
 		}
 	}
