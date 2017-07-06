@@ -450,14 +450,19 @@
 			"Export" : {"Name" : {"Fn::Sub" : "${AWS::StackName}-privateSubnetSGID"}}
       	},
        	"publicSubnetASGId" : {
-			"Description" : "PubSub02 SG ID",
+			"Description" : "Public Subnet A Security Group",
 			"Value" : {"Fn::GetAtt" : ["publicSubnetASG", "GroupId"]},
 			"Export" : {"Name" : {"Fn::Sub" : "${AWS::StackName}-publicSubnetASGID"}}
 		},
 		"publicSubnetBSGId" : {
-			"Description" : "PubSub03 SG ID",
+			"Description" : "PPublic Subnet B Security Group",
 			"Value" : {"Fn::GetAtt" : ["publicSubnetBSG", "GroupId"]},
 			"Export" : {"Name" : {"Fn::Sub" : "${AWS::StackName}-publicSubnetBSGID"}}
+		},
+		"publicSubnetCSGId" : {
+			"Description" : "Public Subnet C Security Group",
+			"Value" : {"Fn::GetAtt" : ["publicSubnetCSG", "GroupId"]},
+			"Export" : {"Name" : {"Fn::Sub" : "${AWS::StackName}-publicSubnetCSGID"}}
 		},
 		"AmaysimLoadBalancerName" : {
 			"Description" : "Click to visit the site",
