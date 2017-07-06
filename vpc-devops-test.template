@@ -405,6 +405,16 @@
         		"Description" : "Private Subnet Security Group ID",
         		"Value" : {"Ref": "privateSubnetSG"},
 			"Export" : {"Name" : {"Fn::Sub" : "${AWS::StackName}-privateSubnetSGID"}}
-      	}
+      	},
+       	"publicSubnetASGId" : {
+			"Description" : "PubSub02 SG ID",
+			"Value" : {"Fn::GetAtt" : ["publicSubnetASG", "GroupId"]},
+			"Export" : {"Name" : {"Fn::Sub" : "${AWS::StackName}-publicSubnetASGID"}}
+		},
+		"publicSubnetBSGId" : {
+			"Description" : "PubSub03 SG ID",
+			"Value" : {"Fn::GetAtt" : ["publicSubnetBSG", "GroupId"]},
+			"Export" : {"Name" : {"Fn::Sub" : "${AWS::StackName}-publicSubnetBSGID"}}
+		}
 	}
 }
