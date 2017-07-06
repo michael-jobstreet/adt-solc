@@ -88,6 +88,37 @@
 			}
 		},
 
+		"privateSubnetSG" : {
+			"Type" : "AWS::EC2::SecurityGroup",
+			"Properties" : {
+				"GroupDescription" : "Private Subnet Security Group",
+				"Tags" : [{"Key" : "Name", "Value" : "Private Subnet Security Group"}],
+				"VpcId" : {"Ref" : "amaysimVPC"}
+			}
+		},
+
+		"privateSubnetAInboundTCP01" : {
+			"Type" : "AWS::EC2::SecurityGroupIngress",
+			"Properties" : {
+				"GroupId" : {"Ref" : "privateSubnetSG"},
+				"CidrIp" : { "Fn::FindInMap": [ "vpc", "cidr", "publicSubnetA"] },
+				"IpProtocol" : "tcp",
+				"FromPort" : "3306",
+				"ToPort" : "3306"
+			}
+		},
+
+		"privateSubnetAInboundTCP02" : {
+			"Type" : "AWS::EC2::SecurityGroupIngress",
+			"Properties" : {
+				"GroupId" : {"Ref" : "privateSubnetSG"},
+				"CidrIp" : { "Fn::FindInMap": [ "vpc", "cidr", "publicSubnetB"] },
+				"IpProtocol" : "tcp",
+				"FromPort" : "3306",
+				"ToPort" : "3306"
+			}
+		},
+
 		"privateSubnetB": {
 			"Type": "AWS::EC2::Subnet",
 			"Properties": {
@@ -250,11 +281,51 @@
 			}
 		}
 	},
-
+ 
 	"Outputs": {
 		"SecurityGroup": {
 			"Description": "Security Group",
 			"Value": { "Ref": "securityGroupDevServer" }
-		}
+		},
+  		"amaysimVPCId" : {
+      		"Description" : "VPC ID",
+        		"Value" : {"Ref": "amaysimVPC"},
+			"Export" : {"Name" : {"Fn::Sub" : "${AWS::StackName}-amaysimVPCID"}}
+		},
+     	"publicSubnetAId" : {
+        		"Description" : "Public Subnet A ID",
+        		"Value" : {"Ref": "publicSubnetA"},
+			"Export" : {"Name" : {"Fn::Sub" : "${AWS::StackName}-publicSubnetAID"}}
+      	},
+     	"publicSubnetBId" : {
+        		"Description" : "Public Subnet B ID",
+        		"Value" : {"Ref": "publicSubnetB"},
+			"Export" : {"Name" : {"Fn::Sub" : "${AWS::StackName}-publicSubnetBID"}}
+      	},
+     	"publicSubnetCId" : {
+        		"Description" : "Public Subnet C ID",
+        		"Value" : {"Ref": "publicSubnetC"},
+			"Export" : {"Name" : {"Fn::Sub" : "${AWS::StackName}-publicSubnetCID"}}
+      	},
+     	"privateSubnetAId" : {
+        		"Description" : "Private Subnet A ID",
+        		"Value" : {"Ref": "privateSubnetA"},
+			"Export" : {"Name" : {"Fn::Sub" : "${AWS::StackName}-privateSubnetAID"}}
+      	},
+     	"privateSubnetBId" : {
+        		"Description" : "Private Subnet B ID",
+        		"Value" : {"Ref": "privateSubnetB"},
+			"Export" : {"Name" : {"Fn::Sub" : "${AWS::StackName}-privateSubnetBID"}}
+      	},
+     	"privateSubnetCId" : {
+        		"Description" : "Private Subnet C ID",
+        		"Value" : {"Ref": "privateSubnetC"},
+			"Export" : {"Name" : {"Fn::Sub" : "${AWS::StackName}-privateSubnetCID"}}
+      	},
+     	"privateSubnetSGId" : {
+        		"Description" : "Private Subnet Security Group ID",
+        		"Value" : {"Ref": "privateSubnetSG"},
+			"Export" : {"Name" : {"Fn::Sub" : "${AWS::StackName}-privateSubnetSGID"}}
+      	}
 	}
 }
