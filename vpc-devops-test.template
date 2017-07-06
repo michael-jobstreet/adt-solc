@@ -75,6 +75,25 @@
 			}
 		},
 
+		"publicSubnetCSG" : {
+			"Type" : "AWS::EC2::SecurityGroup",
+			"Properties" : {
+				"GroupDescription" : "Public Subnet C Security Group",
+				"Tags" : [{"Key" : "Name", "Value" : "Public Subnet C Security Group"}],
+				"VpcId" : {"Ref" : "amaysimVPC"}
+			}
+		},
+		"publicSubnetCInboundSSH" : {
+			"Type" : "AWS::EC2::SecurityGroupIngress",
+			"Properties" : {
+				"GroupId" : {"Ref" : "publicSubnetCSG"},
+				"CidrIp" : "0.0.0.0/0",
+				"IpProtocol" : "tcp",
+				"FromPort" : "22",
+				"ToPort" : "22"
+			}
+		},
+
 		"privateSubnetA": {
 			"Type": "AWS::EC2::Subnet",
 			"Properties": {
