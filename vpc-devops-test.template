@@ -91,6 +91,37 @@
 			}
 		},
 
+		"publicSubnetBSG" : {
+			"Type" : "AWS::EC2::SecurityGroup",
+			"Properties" : {
+				"GroupDescription" : "Public Subnet B Security Group",
+				"Tags" : [{"Key" : "Name", "Value" : "Public Subnet B Security Group"}],
+				"VpcId" : {"Ref" : "amaysimVPC"}
+			}
+		},
+
+		"publicSubnetBInboundHTTP" : {
+			"Type" : "AWS::EC2::SecurityGroupIngress",
+			"Properties" : {
+				"GroupId" : {"Ref" : "publicSubnetBSG"},
+				"CidrIp" : "0.0.0.0/0",
+				"IpProtocol" : "tcp",
+				"FromPort" : "80",
+				"ToPort" : "80"
+			}
+		},
+
+		"publicSubnetBInboundSSH" : {
+			"Type" : "AWS::EC2::SecurityGroupIngress",
+			"Properties" : {
+				"GroupId" : {"Ref" : "publicSubnetBSG"},
+				"CidrIp" : "10.0.2.0/24",
+				"IpProtocol" : "tcp",
+				"FromPort" : "22",
+				"ToPort" : "22"
+			}
+		},
+
 		"publicSubnetC": {
 			"Type": "AWS::EC2::Subnet",
 			"Properties": {
