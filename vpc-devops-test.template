@@ -358,7 +358,50 @@
 				"AllocationId": {"Fn::GetAtt": ["NATEIP", "AllocationId"]},
 				"SubnetId": {"Ref": "publicSubnetA"}
 			}
-		}
+		},
+  
+		"AmaysimLoadBalancerSG" : {
+			"Type" : "AWS::EC2::SecurityGroup",
+			"Properties" : {
+				"GroupDescription" : "Amaysim LoadBalancer Security Group",
+				"Tags" : [{"Key" : "Name", "Value" : "adt-solc Amaysim LoadBalancer SG"}],
+				"VpcId" : {"Ref" : "amaysimVPC"}
+			}
+		},
+		"AmaysimLoadBalancerInboundHTTP" : {
+			"Type" : "AWS::EC2::SecurityGroupIngress",
+			"Properties" : {
+				"GroupId" : {"Ref" : "AmaysimLoadBalancerSG"},
+				"CidrIp" : "0.0.0.0/0",
+				"IpProtocol" : "tcp",
+				"FromPort" : "80",
+				"ToPort" : "80"
+			}
+		},
+
+		"AmaysimLoadBalancer" : {
+			"Type" : "AWS::ElasticLoadBalancing::LoadBalancer",
+			"Properties" : {
+				"Subnets" : [{"Ref" : "publicSubnetA"}, {"Ref" : "publicSubnetB"}],
+				"Listeners" : [{
+					"InstancePort" : "80",
+					"InstanceProtocol" : "HTTP",
+					"LoadBalancerPort" : "80",
+					"Protocol" : "HTTP"
+				}],
+				"HealthCheck" : {
+					"Target" : "HTTP:80/index.php",
+					"Interval" : "10",
+					"Timeout" : "5",
+					"HealthyThreshold" : "3",
+					"UnhealthyThreshold" : "2"
+				},
+				"Scheme" : "internet-facing",
+				"SecurityGroups" : [{"Ref" : "AmaysimLoadBalancerSG"}], 
+				"CrossZone" : "true",
+				"Tags" : [{"Key": "Name", "Value" : "adt-solc Amaysim LoadBalancer"}]
+			}
+		}  
 	},
  
 	"Outputs": {
@@ -415,6 +458,15 @@
 			"Description" : "PubSub03 SG ID",
 			"Value" : {"Fn::GetAtt" : ["publicSubnetBSG", "GroupId"]},
 			"Export" : {"Name" : {"Fn::Sub" : "${AWS::StackName}-publicSubnetBSGID"}}
+		},
+		"AmaysimLoadBalancerName" : {
+			"Description" : "Click to visit the site",
+			"Value" : {"Fn::Join" : ["", ["http://", {"Fn::GetAtt": ["AmaysimLoadBalancer", "DNSName"]}]]}
+		},
+		"AmaysimLoadBalancerId" : {
+			"Description" : "LoadBalancer ID",
+			"Value" : {"Ref" : "AmaysimLoadBalancer"},
+			"Export" : {"Name" : {"Fn::Sub" : "${AWS::StackName}-AmaysimLoadBalancerID"}}
 		}
 	}
 }
